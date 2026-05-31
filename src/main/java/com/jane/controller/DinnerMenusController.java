@@ -42,4 +42,22 @@ public class DinnerMenusController {
         return message;
 
     }
+
+    @GetMapping(value = "/english", produces = MediaType.TEXT_PLAIN_VALUE)
+    public String convertToEnglish(){
+        String ocrText = convertToText();
+        String englishText = "";
+        String systemPrompt = """
+                You are a professional menu translator.
+                Translate the following menu text into English.
+                Keep the formatting (line breaks, headings, prices) as close as possible.
+                Do not add extra explanations.
+                Return the menu in HTML format for easy rendering but don't show the HTML tags.
+                """;
+        var prompt = chatClient.prompt().system(systemPrompt).user(ocrText);
+
+        englishText = prompt.call().content();
+
+        return englishText;
+    }
 }

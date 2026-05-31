@@ -13,4 +13,4 @@ spring:
             speed: 1.2
       chat:
         options:
-          model: gpt-4o-mini
+          model: gpt-5.4-mini
