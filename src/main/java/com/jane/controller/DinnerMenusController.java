@@ -2,6 +2,7 @@ package com.jane.controller;
 
 import com.jane.model.Menu;
 import org.springframework.ai.audio.tts.TextToSpeechModel;
+import org.springframework.ai.audio.tts.TextToSpeechPrompt;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.image.ImageModel;
 import org.springframework.ai.image.ImagePrompt;
@@ -122,4 +123,25 @@ public class DinnerMenusController {
             """.formatted(base64Representation);
     return html;
     }
+
+    @GetMapping(path = "/english/audio", produces = "audio/mpeg")
+    public byte[] englishAudio(){
+        Menu menu = convertToJson();
+
+        var textToSpeak = "Here is the menu: " + menu.items();
+
+        if (textToSpeak.length() > 3750) {
+            textToSpeak = textToSpeak.substring(0, 3750);
+        }
+
+        var prompt = new TextToSpeechPrompt(textToSpeak);
+
+        var response = textToSpeechModel.call(prompt);
+
+        var mp3 = response.getResult().getOutput();
+
+        return mp3;
+    }
+
+
 }
