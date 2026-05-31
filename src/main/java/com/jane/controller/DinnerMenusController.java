@@ -4,6 +4,9 @@ import com.jane.model.Menu;
 import org.springframework.ai.audio.tts.TextToSpeechModel;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.image.ImageModel;
+import org.springframework.ai.image.ImagePrompt;
+import org.springframework.ai.image.ImageResponse;
+import org.springframework.ai.openai.OpenAiImageOptions;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.util.MimeTypeUtils;
@@ -81,5 +84,42 @@ public class DinnerMenusController {
         var prompt = chatClient.prompt().system(systemPrompt).user(userPrompt);
 
         return prompt.call().entity(Menu.class);
+    }
+
+    @GetMapping(value = "/image", produces = MediaType.TEXT_HTML_VALUE)
+    public String generateImageFromJson(){
+        Menu menu = convertToJson();
+
+        String systemPrompt = """
+                Create a beautiful image (1024x1024) inspired by the restaurant and dishes specified in the file %s
+                Critical requirements: make it visually striking and professional.
+                Style guidance (choose ONE and not both)
+                A) cinematic food photography aesthetic, more lighting, shallow depth of field.
+                B) elegant, minimal illustrations, premium bistro vibe.
+                
+                Composition:
+                - strong focal point (plate/ingredients/table setting)
+                - high contrast
+                - uncultured
+                """.formatted(menu.toString());
+        if(systemPrompt.length() > 3750){
+            systemPrompt = systemPrompt.substring(0, 3750);
+        }
+        var options = OpenAiImageOptions.builder()
+                .model("gpt-image-2")
+                .width(1024)
+                .height(1024)
+                .quality("medium")
+                .responseFormat("b64_json")
+                .N(1)
+                .build();
+    ImageResponse response = imageModel.call(new ImagePrompt(systemPrompt, options));
+    var base64Representation = response.getResult().getOutput().getB64Json();
+
+    var html = """
+            <img alt="Restaurant hero poster" style="max-width:900px, width: 100%%, border: 1px solid #ccc"
+            src="data:image/png;base64, %s" />
+            """.formatted(base64Representation);
+    return html;
     }
 }
