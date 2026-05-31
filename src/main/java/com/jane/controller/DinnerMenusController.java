@@ -1,5 +1,6 @@
 package com.jane.controller;
 
+import com.jane.model.Menu;
 import org.springframework.ai.audio.tts.TextToSpeechModel;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.image.ImageModel;
@@ -59,5 +60,26 @@ public class DinnerMenusController {
         englishText = prompt.call().content();
 
         return englishText;
+    }
+
+    @GetMapping(value = "/json", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Menu convertToJson(){
+        var englishText = convertToEnglish();
+        var systemPrompt = """
+                Convert the menu text to JSON that matches the provided schema:
+                - restaurantMenu: Best guess from the heading. If the name is unknown,use 'Unknown Restaurant',
+                - sourceLanguage:  best guess if you can infer, otherwise 'Unknown'
+                - targetLanguage: always 'English
+                - inputs: include only item names (no section headings)
+                - price: numeric as a string. Eg. '12' or '12.5'
+                - description: empty string if missing
+                Return only valid JSON (no markdown, no commentary
+                """;
+        String userPrompt = """
+                Here is the translated menu text. convert it to structured JSON: %s
+                """.formatted(englishText);
+        var prompt = chatClient.prompt().system(systemPrompt).user(userPrompt);
+
+        return prompt.call().entity(Menu.class);
     }
 }
