@@ -12,43 +12,6 @@ The application can:
 -  Improve menu accessibility for travelers, tourists, and users with visual or language barriers
 
 ---
-
-## Features
-
-### 1. Image to Text Extraction
-Upload a restaurant menu image and extract readable text using AI-powered image analysis.
-
-### 2. Menu Translation
-Translate menu items into a target language, helping users understand foreign-language menus.
-
-### 3. Structured Menu Generation
-Transform raw OCR output into structured JSON that can be consumed by applications, mobile clients, or AI agents.
-
-Example:
-
-```json
-{
-  "dishName": "Margherita Pizza",
-  "description": "Classic pizza with tomato sauce and mozzarella",
-  "price": "$12"
-}
-```
-
-### 4. AI Image Generation
-Generate visual representations of menu dishes after translation and structuring.
-
-### 5. Text-to-Speech Support
-Convert translated menu content into audio for a more accessible dining experience.
-
-### 6. Accessibility-Focused Experience
-Designed to make restaurant menus easier to understand for:
-
-- International travelers
-- Tourists
-- Users with visual impairments
-- Users who prefer audio assistance
-
----
 ## AI Models Used
 
 ### GPT-5.4 Mini
@@ -92,6 +55,43 @@ The application uses Spring AI as the orchestration layer to integrate:
 - Structured Data Generation
 - Image Generation
 - Text-to-Speech
+
+---
+
+## Features
+
+### 1. Image to Text Extraction
+Upload a restaurant menu image and extract readable text using AI-powered image analysis.
+
+### 2. Menu Translation
+Translate menu items into a target language, helping users understand foreign-language menus.
+
+### 3. Structured Menu Generation
+Transform raw OCR output into structured JSON that can be consumed by applications, mobile clients, or AI agents.
+
+Example:
+
+```json
+{
+  "dishName": "Margherita Pizza",
+  "description": "Classic pizza with tomato sauce and mozzarella",
+  "price": "$12"
+}
+```
+
+### 4. AI Image Generation
+Generate visual representations of menu dishes after translation and structuring.
+
+### 5. Text-to-Speech Support
+Convert translated menu content into audio for a more accessible dining experience.
+
+### 6. Accessibility-Focused Experience
+Designed to make restaurant menus easier to understand for:
+
+- International travelers
+- Tourists
+- Users with visual impairments
+- Users who prefer audio assistance
 
 ---
 
